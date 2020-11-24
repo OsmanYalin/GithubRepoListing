@@ -19,13 +19,18 @@ android {
         versionCode versions.versionCode
         versionName versions.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "BASE_URL", project.BASE_URL
+        buildConfigField "String", "CLIENT_ID", project.CLIENT_ID
+        buildConfigField "String", "CLIENT_SECRET", project.CLIENT_SECRET
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -38,6 +43,10 @@ android {
         jvmTarget = '1.8'
     }
 
+    androidExtensions {
+        features = ["parcelize"]
+    }
+    
     buildFeatures {
         viewBinding = true
         dataBinding = true
