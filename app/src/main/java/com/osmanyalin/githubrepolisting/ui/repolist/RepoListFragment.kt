@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.osmanyalin.githubrepolisting.R
 import com.osmanyalin.githubrepolisting.base.BaseFragment
-import com.osmanyalin.githubrepolisting.base.BaseResponseListener
 import com.osmanyalin.githubrepolisting.databinding.FragmentRepoListBinding
 import com.osmanyalin.githubrepolisting.model.RepoModel
 import com.osmanyalin.githubrepolisting.network.Resource
 import com.osmanyalin.githubrepolisting.ui.navigation.NavigationManager
 import com.osmanyalin.githubrepolisting.ui.repodetail.RepoDetailFragment
 import com.osmanyalin.githubrepolisting.ui.toolbar.FragmentToolbar
+import com.osmanyalin.githubrepolisting.util.Constant
 import com.osmanyalin.githubrepolisting.util.disable
 import com.osmanyalin.githubrepolisting.util.enable
 import com.osmanyalin.githubrepolisting.util.hideKeyboard
@@ -25,13 +25,15 @@ import com.osmanyalin.githubrepolisting.view.ScrollListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RepoListFragment : BaseFragment(), BaseResponseListener<List<RepoModel>>, View.OnClickListener, TextWatcher {
+class RepoListFragment : BaseFragment(), RepoListView, View.OnClickListener, TextWatcher {
 
     private lateinit var binding: FragmentRepoListBinding
     private val viewModel: RepoListViewModel by activityViewModels()
 
     private lateinit var adapter: RepoListAdapter
     private var username: String = ""
+    private var page: Int = 1
+    private var isAllDataLoaded: Boolean = false
 
     companion object {
         fun newInstance() = RepoListFragment()
@@ -63,15 +65,18 @@ class RepoListFragment : BaseFragment(), BaseResponseListener<List<RepoModel>>, 
         binding.rvRepoList.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
         binding.rvRepoList.addOnScrollListener(object : ScrollListener(linearLayoutManager) {
             override fun loadMoreItems() {
-                //TODO: handle it later if it is necessary
+                if(!isAllDataLoaded) {
+                    page++
+                    getUserRepos(username, page.toString())
+                }
             }
         })
         adapter = RepoListAdapter()
         binding.rvRepoList.adapter = adapter
     }
 
-    private fun getUserRepos(username: String) {
-        viewModel.getUserRepos(username).observe(viewLifecycleOwner, {
+    private fun getUserRepos(username: String, page: String = Constant.INITIAL_PAGE_QUERY) {
+        viewModel.getUserRepos(username, page).observe(viewLifecycleOwner, {
 
             when (it.status) {
                 Resource.Status.SUCCESS -> onSuccess(it.data)
@@ -83,40 +88,54 @@ class RepoListFragment : BaseFragment(), BaseResponseListener<List<RepoModel>>, 
 
     override fun onSuccess(data: List<RepoModel>?) {
         hideLoading()
+        binding.progressBottom.visibility = View.GONE
         binding.btnSubmit.enable()
 
-        if(data.isNullOrEmpty()) {
+        if(data.isNullOrEmpty() && adapter.itemCount == 0) {
             binding.noDataView.visibility = View.VISIBLE
         } else {
             binding.noDataView.visibility = View.GONE
         }
 
-        val repoList = data?.toMutableList()
-        repoList?.let {
-            adapter.addItems(it)
-            adapter.onClick { content -> navigateToDetail(content.id) }
+        data?.toMutableList()?.let {
+            if(it.size > 0) {
+                adapter.addItems(it)
+                adapter.onClick { content -> navigateToDetail(content.id) }
+            } else {
+                isAllDataLoaded = true
+            }
         }
     }
 
     override fun onError() {
         hideLoading()
+        binding.progressBottom.visibility = View.GONE
         binding.btnSubmit.enable()
         showToast(R.string.an_error_occurred)
+        isAllDataLoaded = true
     }
 
     override fun onLoading() {
-        showLoading()
+        if(adapter.itemCount > 0) {
+            binding.progressBottom.visibility = View.VISIBLE
+        } else {
+            showLoading()
+        }
+
         binding.btnSubmit.disable()
         binding.noDataView.visibility = View.GONE
     }
 
+    override fun onSubmit() {
+        hideKeyboard()
+        adapter.clear()
+        binding.etUserName.clearFocus()
+        getUserRepos(username)
+    }
+
     override fun onClick(v: View?) {
         when(v?.id) {
-            binding.btnSubmit.id -> {
-                hideKeyboard()
-                adapter.clear()
-                getUserRepos(username)
-            }
+            binding.btnSubmit.id -> { onSubmit() }
         }
     }
 

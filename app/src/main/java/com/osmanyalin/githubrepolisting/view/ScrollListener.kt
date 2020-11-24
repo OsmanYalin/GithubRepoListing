@@ -12,9 +12,8 @@ abstract class ScrollListener(private val layoutManager: LinearLayoutManager) : 
         val totalItemCount = layoutManager.itemCount
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-        if (firstVisibleItemPosition >= 0 &&
-            visibleItemCount + firstVisibleItemPosition >= totalItemCount
-            ) {
+        if (firstVisibleItemPosition >= 0
+            && visibleItemCount + firstVisibleItemPosition >= totalItemCount) {
             loadMoreItems()
         }
     }

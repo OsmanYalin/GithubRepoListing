@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(private val apiProvider: ApiProvider) {
 
-    suspend fun getUserRepos(username: String) = apiProvider.getUserRepos(username).body()
+    suspend fun getUserRepos(username: String, page: String) = apiProvider.getUserRepos(username, page).body()
 }

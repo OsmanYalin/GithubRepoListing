@@ -14,20 +14,21 @@ class RepoListViewModel @ViewModelInject constructor(
     private val repository: UserRepository,
     application: Application) : BaseViewModel(application) {
 
-    private var listRepo = mutableListOf<RepoModel>()
+    private var listRepositories = mutableListOf<RepoModel>()
     val repoItem = MutableLiveData<RepoModel>()
 
-    fun getUserRepos(username: String) = liveData(Dispatchers.IO) {
+    fun getUserRepos(username: String, page: String) = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
         try {
-            listRepo = repository.getUserRepos(username) as MutableList<RepoModel>
-            emit(Resource.success(data = listRepo))
+            val userRepos = repository.getUserRepos(username, page)
+            listRepositories.plusAssign(userRepos as MutableList<RepoModel>)
+            emit(Resource.success(data = userRepos))
         } catch (exception: Exception) {
             emit(Resource.error(data = null, message = exception.message ?: "Error Occurred!"))
         }
     }
 
     fun fetchRepoDetail(repoId: Int) {
-        repoItem.value = listRepo.single { it.id == repoId }
+        repoItem.value = listRepositories.single { it.id == repoId }
     }
 }
