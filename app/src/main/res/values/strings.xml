@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Github Repo Listing</string>
+    <string name="no_data_found">No repository found</string>
+    <string name="star_count">Star Count</string>
+    <string name="open_issue_count">Open Issue Count</string>
+    <string name="repo_detail">Repository Detail</string>
+    <string name="enter_user_name">Enter user name…</string>
+    <string name="submit">Submit</string>
+    <string name="an_error_occurred">An error occurred</string>
 </resources>
