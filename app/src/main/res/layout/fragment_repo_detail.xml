@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="viewModel"
-            type="com.osmanyalin.githubrepolisting.ui.shared.SharedRepoViewModel" />
-        <variable
             name="repo"
             type="com.osmanyalin.githubrepolisting.model.RepoModel" />
     </data>

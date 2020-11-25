@@ -21,11 +21,11 @@ class SharedRepoViewModel @ViewModelInject constructor(
 
     private var listRepositories = mutableListOf<RepoModel>()
     val repoItem = MutableLiveData<RepoModel>()
-
     val allFavorites: LiveData<List<FavoriteDBModel>> = favoriteRepository.favoriteList.asLiveData()
 
     fun getUserRepos(username: String, page: String) = liveData(Dispatchers.IO) {
         emit(Resource.loading(data = null))
+
         try {
             val userRepos = repoRepository.getUserRepos(username, page)
 

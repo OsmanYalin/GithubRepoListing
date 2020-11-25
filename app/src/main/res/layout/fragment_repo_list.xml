@@ -26,22 +26,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/enter_user_name"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
                 android:imeOptions="actionDone"
                 android:letterSpacing="0.03"
                 android:paddingStart="20dp"
                 android:paddingEnd="16dp"
-                android:singleLine="true"
                 android:focusableInTouchMode="true"
                 android:textColor="#4b4b4b"
                 android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="1dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.6"/>
 
         <Button
             android:id="@+id/btn_submit"
@@ -54,6 +49,14 @@
             app:layout_constraintBottom_toBottomOf="@id/il_user_name"
             app:layout_constraintStart_toEndOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="@id/il_user_name" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.6"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_repo_list"

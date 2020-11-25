@@ -6,7 +6,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -19,18 +18,10 @@ class FavoriteRepository @Inject constructor(appDatabase: AppDatabase): Coroutin
     var favoriteList: Flow<List<FavoriteDBModel>> = favoritesDao.getFavorites()
 
     fun insertFavorite(favorite: FavoriteDBModel) {
-        launch {
-            withContext(Dispatchers.IO) {
-                favoritesDao.insertFavorite(favorite)
-            }
-        }
+        launch { favoritesDao.insertFavorite(favorite) }
     }
 
     fun deleteFavorite(id: Int) {
-        launch {
-            withContext(Dispatchers.IO) {
-                favoritesDao.deleteFavorite(id)
-            }
-        }
+        launch { favoritesDao.deleteFavorite(id) }
     }
 }

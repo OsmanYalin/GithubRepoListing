@@ -42,7 +42,7 @@ class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.RepoViewHolder>() {
         holder.bind(items[position])
     }
 
-    class RepoViewHolder(val binding: ItemRepoBinding) : RecyclerView.ViewHolder(binding.root) {
+    class RepoViewHolder(private val binding: ItemRepoBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RepoModel) {
             binding.repo = item
@@ -58,4 +58,3 @@ class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.RepoViewHolder>() {
         }
     }
 }
-

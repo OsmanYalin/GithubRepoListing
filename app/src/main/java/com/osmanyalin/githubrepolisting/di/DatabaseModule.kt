@@ -3,7 +3,6 @@ package com.osmanyalin.githubrepolisting.di
 import android.app.Application
 import androidx.room.Room
 import com.osmanyalin.githubrepolisting.db.AppDatabase
-import com.osmanyalin.githubrepolisting.db.dao.FavoritesDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,10 +21,5 @@ object DatabaseModule {
             AppDatabase::class.java,
             AppDatabase.DB_NAME
         ).fallbackToDestructiveMigration().build()
-    }
-
-    @Provides
-    internal fun provideFavoritesDao(appDatabase: AppDatabase): FavoritesDao {
-        return appDatabase.favoritesDao
     }
 }
