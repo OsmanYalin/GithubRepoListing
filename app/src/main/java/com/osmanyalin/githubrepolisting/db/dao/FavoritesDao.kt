@@ -17,5 +17,5 @@ interface FavoritesDao {
     fun insertFavorite(favorite: FavoriteDBModel)
 
     @Query("DELETE FROM favorites WHERE _id=:id")
-    fun deleteFavorite(id: String)
+    fun deleteFavorite(id: Int)
 }

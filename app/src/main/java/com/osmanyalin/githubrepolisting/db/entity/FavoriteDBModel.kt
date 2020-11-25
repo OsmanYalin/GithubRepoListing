@@ -7,7 +7,7 @@ import com.osmanyalin.githubrepolisting.db.AppDatabase
 @Entity(tableName = AppDatabase.TABLE_FAVORITES)
 data class FavoriteDBModel(
     @PrimaryKey
-    val _id: String,
+    val _id: Int,
     val repoName: String,
     val userName: String,
     val userAvatar: String,

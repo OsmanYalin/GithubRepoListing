@@ -9,15 +9,16 @@ import coil.load
 import com.osmanyalin.githubrepolisting.R
 import com.osmanyalin.githubrepolisting.base.BaseFragment
 import com.osmanyalin.githubrepolisting.databinding.FragmentRepoDetailBinding
-import com.osmanyalin.githubrepolisting.ui.repolist.RepoListViewModel
+import com.osmanyalin.githubrepolisting.ui.shared.SharedRepoViewModel
 import com.osmanyalin.githubrepolisting.ui.toolbar.FragmentToolbar
+import com.osmanyalin.githubrepolisting.util.setTintColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RepoDetailFragment : BaseFragment() {
+class RepoDetailFragment : BaseFragment(), RepoDetailView, View.OnClickListener {
 
     private lateinit var binding: FragmentRepoDetailBinding
-    private val viewModel: RepoListViewModel by activityViewModels()
+    private val viewModel: SharedRepoViewModel by activityViewModels()
     private val repoId by lazy { (arguments?.getInt(ARG_REPO_ID) ?: 0) }
 
     companion object {
@@ -37,6 +38,8 @@ class RepoDetailFragment : BaseFragment() {
 
     override fun setUp(view: View?) {
         viewModel.fetchRepoDetail(repoId)
+        binding.ivStar.setOnClickListener(this)
+
         bindContent()
     }
 
@@ -55,10 +58,28 @@ class RepoDetailFragment : BaseFragment() {
 
     private fun bindContent() {
         viewModel.repoItem.observe(this, {
-            binding.run {
-                repoModel = it
-                ivUser.load(it.owner.avatar_url)
-            }
+            binding.repo = it
+            binding.ivUser.load(it.owner.avatar_url)
         })
+    }
+
+    override fun onFavoriteClicked() {
+        binding.repo?.let {
+            if (it.isFavorite) {
+                viewModel.removeFavorite(it)
+                showToast(R.string.removed_favorite)
+                binding.ivStar.setTintColor(R.color.pale_grey)
+            } else {
+                viewModel.addFavorite(it)
+                showToast(R.string.added_favorite)
+                binding.ivStar.setTintColor(R.color.yellow)
+            }
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id) {
+            binding.ivStar.id -> onFavoriteClicked()
+        }
     }
 }

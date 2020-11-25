@@ -26,7 +26,7 @@ class FavoriteRepository @Inject constructor(appDatabase: AppDatabase): Coroutin
         }
     }
 
-    fun deleteFavorite(id: String) {
+    fun deleteFavorite(id: Int) {
         launch {
             withContext(Dispatchers.IO) {
                 favoritesDao.deleteFavorite(id)

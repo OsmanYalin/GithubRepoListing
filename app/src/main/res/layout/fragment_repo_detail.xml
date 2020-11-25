@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="repoModel"
+            name="viewModel"
+            type="com.osmanyalin.githubrepolisting.ui.shared.SharedRepoViewModel" />
+        <variable
+            name="repo"
             type="com.osmanyalin.githubrepolisting.model.RepoModel" />
     </data>
     <ScrollView
@@ -41,9 +44,9 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:text="@{repoModel.name}"
+                android:text="@{repo.name}"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -57,11 +60,11 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="@{repoModel.owner.login}"
+                android:text="@{repo.owner.login}"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -76,7 +79,7 @@
                 android:layout_marginTop="60dp"
                 android:text="@string/open_issue_count"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_star" />
 
             <TextView
                 android:id="@+id/tv_open_issue_count"
@@ -84,11 +87,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
                 android:layout_marginEnd="60dp"
+                android:textSize="16sp"
                 tools:text="@string/open_issue_count"
-                android:text="@{repoModel.open_issues_count}"
+                android:text="@{repo.open_issues_count}"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_star" />
 
             <TextView
                 android:id="@+id/star_count_text"
@@ -108,11 +112,23 @@
                 android:layout_marginEnd="60dp"
                 android:textColor="@color/black"
                 android:drawablePadding="10dp"
+                android:textSize="16sp"
                 android:gravity="center_vertical"
-                android:drawableStart="@drawable/ic_star"
-                android:text="@{repoModel.stargazers_count}"
+                android:text="@{repo.stargazers_count}"
+                tools:text="@string/star_count"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_open_issue_count" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_star"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="24dp"
+                android:src="@drawable/ic_star"
+                android:tint="@{repo.favorite ? @color/yellow : @color/pale_grey}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

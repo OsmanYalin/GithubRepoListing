@@ -1,4 +1,4 @@
-package com.osmanyalin.githubrepolisting.ui.repolist
+package com.osmanyalin.githubrepolisting.ui.shared
 
 import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
@@ -14,7 +14,7 @@ import com.osmanyalin.githubrepolisting.repository.FavoriteRepository
 import com.osmanyalin.githubrepolisting.repository.UserRepoRepository
 import kotlinx.coroutines.Dispatchers
 
-class RepoListViewModel @ViewModelInject constructor(
+class SharedRepoViewModel @ViewModelInject constructor(
     private val repoRepository: UserRepoRepository,
     private val favoriteRepository: FavoriteRepository,
     application: Application) : BaseViewModel(application) {
@@ -28,6 +28,8 @@ class RepoListViewModel @ViewModelInject constructor(
         emit(Resource.loading(data = null))
         try {
             val userRepos = repoRepository.getUserRepos(username, page)
+
+            markFavorites(userRepos)
             listRepositories.plusAssign(userRepos as MutableList<RepoModel>)
             emit(Resource.success(data = userRepos))
         } catch (exception: Exception) {
@@ -42,7 +44,7 @@ class RepoListViewModel @ViewModelInject constructor(
     fun addFavorite(repoModel: RepoModel) {
         favoriteRepository.insertFavorite(
             FavoriteDBModel(
-                repoModel.id.toString(),
+                repoModel.id,
                 repoModel.name,
                 repoModel.owner.login,
                 repoModel.owner.avatar_url,
@@ -50,5 +52,25 @@ class RepoListViewModel @ViewModelInject constructor(
                 repoModel.stargazers_count
             )
         )
+
+        repoModel.isFavorite = true
+        repoItem.value = repoModel
+    }
+
+    fun removeFavorite(repoModel: RepoModel) {
+        favoriteRepository.deleteFavorite(repoModel.id)
+
+        repoModel.isFavorite = false
+        repoItem.value = repoModel
+    }
+
+    private fun markFavorites(userRepos: List<RepoModel>?) {
+        userRepos?.let {
+            for(repo in userRepos) {
+                if(allFavorites.value?.find { it._id == repo.id } != null) {
+                    repo.isFavorite = true
+                }
+            }
+        }
     }
 }

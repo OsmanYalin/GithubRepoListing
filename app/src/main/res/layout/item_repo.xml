@@ -3,7 +3,7 @@
 
     <data>
         <variable
-            name="data"
+            name="repo"
             type="com.osmanyalin.githubrepolisting.model.RepoModel" />
     </data>
 
@@ -24,7 +24,7 @@
             android:maxLines="1"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{data.name}"
+            android:text="@{repo.name}"
             app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,10 +33,12 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_star"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_star"
+            android:tint="@{repo.favorite ? @color/yellow : @color/pale_grey}"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_repo_name"
             app:layout_constraintStart_toEndOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="parent" />
 

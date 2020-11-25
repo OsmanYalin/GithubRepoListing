@@ -10,4 +10,7 @@ data class RepoModel(
     val stargazers_count: String,
     val open_issues_count: String,
     val owner: OwnerModel
-): Parcelable
+): Parcelable {
+
+    var isFavorite: Boolean = false
+}

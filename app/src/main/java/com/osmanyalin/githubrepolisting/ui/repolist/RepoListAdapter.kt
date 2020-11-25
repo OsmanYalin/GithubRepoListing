@@ -6,18 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.osmanyalin.githubrepolisting.databinding.ItemRepoBinding
 import com.osmanyalin.githubrepolisting.model.RepoModel
 
-class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.ContentViewHolder>() {
+class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.RepoViewHolder>() {
 
     private lateinit var itemClickListener: ((RepoModel) -> Unit)
-    private lateinit var favoriteClickListener: ((RepoModel) -> Unit)
     private val items: MutableList<RepoModel> = mutableListOf()
 
     fun onItemClick(clickListener: ((RepoModel) -> Unit)) {
         itemClickListener = clickListener
-    }
-
-    fun onFavoriteClick(clickListener: ((RepoModel) -> Unit)) {
-        favoriteClickListener = clickListener
     }
 
     fun clear() {
@@ -30,40 +25,35 @@ class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.ContentViewHolder>(
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContentViewHolder {
-        return ContentViewHolder.create(LayoutInflater.from(parent.context), parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoViewHolder {
+        return RepoViewHolder.create(LayoutInflater.from(parent.context), parent)
     }
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: ContentViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RepoViewHolder, position: Int) {
 
         holder.itemView.setOnClickListener {
             if(::itemClickListener.isInitialized) {
                 itemClickListener.invoke(items[position])
             }
         }
-        holder.binding.ivStar.setOnClickListener {
-            if(::favoriteClickListener.isInitialized) {
-                favoriteClickListener.invoke(items[position])
-            }
-        }
 
         holder.bind(items[position])
     }
 
-    class ContentViewHolder(val binding: ItemRepoBinding) : RecyclerView.ViewHolder(binding.root) {
+    class RepoViewHolder(val binding: ItemRepoBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RepoModel) {
-            binding.data = item
+            binding.repo = item
             binding.executePendingBindings()
         }
 
         companion object {
-            fun create(inflater: LayoutInflater, parent: ViewGroup): ContentViewHolder {
+            fun create(inflater: LayoutInflater, parent: ViewGroup): RepoViewHolder {
                 val binding = ItemRepoBinding.inflate(inflater, parent, false)
 
-                return ContentViewHolder(binding)
+                return RepoViewHolder(binding)
             }
         }
     }

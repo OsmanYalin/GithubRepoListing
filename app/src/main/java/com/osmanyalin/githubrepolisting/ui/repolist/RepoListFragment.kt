@@ -16,6 +16,7 @@ import com.osmanyalin.githubrepolisting.model.RepoModel
 import com.osmanyalin.githubrepolisting.network.Resource
 import com.osmanyalin.githubrepolisting.ui.navigation.NavigationManager
 import com.osmanyalin.githubrepolisting.ui.repodetail.RepoDetailFragment
+import com.osmanyalin.githubrepolisting.ui.shared.SharedRepoViewModel
 import com.osmanyalin.githubrepolisting.ui.toolbar.FragmentToolbar
 import com.osmanyalin.githubrepolisting.util.Constant
 import com.osmanyalin.githubrepolisting.util.disable
@@ -28,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class RepoListFragment : BaseFragment(), RepoListView, View.OnClickListener, TextWatcher {
 
     private lateinit var binding: FragmentRepoListBinding
-    private val viewModel: RepoListViewModel by activityViewModels()
+    private val viewModel: SharedRepoViewModel by activityViewModels()
 
     private lateinit var adapter: RepoListAdapter
     private var username: String = ""
@@ -57,6 +58,7 @@ class RepoListFragment : BaseFragment(), RepoListView, View.OnClickListener, Tex
         binding.etUserName.addTextChangedListener(this)
         binding.btnSubmit.setOnClickListener(this)
         binding.btnSubmit.disable()
+        observeFavoriteList()
     }
 
     private fun handleRecyclerView() {
@@ -86,6 +88,14 @@ class RepoListFragment : BaseFragment(), RepoListView, View.OnClickListener, Tex
         })
     }
 
+    private fun observeFavoriteList() {
+        viewModel.allFavorites.observe(this, {
+            if(it.isNotEmpty() && ::adapter.isInitialized) {
+                adapter.notifyDataSetChanged()
+            }
+        })
+    }
+
     override fun onSuccess(data: List<RepoModel>?) {
         hideLoading()
         binding.progressBottom.visibility = View.GONE
@@ -100,7 +110,7 @@ class RepoListFragment : BaseFragment(), RepoListView, View.OnClickListener, Tex
         data?.toMutableList()?.let {
             if(it.size > 0) {
                 adapter.addItems(it)
-                adapter.onClick { content -> navigateToDetail(content.id) }
+                adapter.onItemClick { repo -> navigateToDetail(repo.id) }
             } else {
                 isAllDataLoaded = true
             }
@@ -130,12 +140,14 @@ class RepoListFragment : BaseFragment(), RepoListView, View.OnClickListener, Tex
         hideKeyboard()
         adapter.clear()
         binding.etUserName.clearFocus()
+        isAllDataLoaded = false
+        page = 1
         getUserRepos(username)
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            binding.btnSubmit.id -> { onSubmit() }
+            binding.btnSubmit.id -> onSubmit()
         }
     }
 
