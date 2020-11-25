@@ -13,4 +13,4 @@ Here are the technologies which used while developing this application:
 * Kotlin Coroutines supported [Coil](https://github.com/coil-kt/coil) library for image loading and caching.
 
 ## Requirements
-The project supports Android API 21 (Lollipop) and above. You will need an existing Android SDK installation and Android Studio in order to use this project.
+This project supports Android API 21 (Lollipop) and above. You will need an existing Android SDK installation and Android Studio in order to use this project. Also a signed .apk file with named _repo-listing-app-release.apk_ is added on root project directory. You can install this file directly on your phone without compiling the project.
