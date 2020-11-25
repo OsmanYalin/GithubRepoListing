@@ -38,4 +38,8 @@ abstract class BaseFragment : Fragment() {
     protected fun showToast(@StringRes message: Int, duration: Int = Toast.LENGTH_SHORT) {
         Toast.makeText(activity, getString(message), duration).show()
     }
+
+    protected fun showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(activity, message, duration).show()
+    }
 }

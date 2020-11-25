@@ -9,10 +9,15 @@ import com.osmanyalin.githubrepolisting.model.RepoModel
 class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.ContentViewHolder>() {
 
     private lateinit var itemClickListener: ((RepoModel) -> Unit)
+    private lateinit var favoriteClickListener: ((RepoModel) -> Unit)
     private val items: MutableList<RepoModel> = mutableListOf()
 
-    fun onClick(clickListener: ((RepoModel) -> Unit)) {
+    fun onItemClick(clickListener: ((RepoModel) -> Unit)) {
         itemClickListener = clickListener
+    }
+
+    fun onFavoriteClick(clickListener: ((RepoModel) -> Unit)) {
+        favoriteClickListener = clickListener
     }
 
     fun clear() {
@@ -38,10 +43,16 @@ class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.ContentViewHolder>(
                 itemClickListener.invoke(items[position])
             }
         }
+        holder.binding.ivStar.setOnClickListener {
+            if(::favoriteClickListener.isInitialized) {
+                favoriteClickListener.invoke(items[position])
+            }
+        }
+
         holder.bind(items[position])
     }
 
-    class ContentViewHolder(private val binding: ItemRepoBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ContentViewHolder(val binding: ItemRepoBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: RepoModel) {
             binding.data = item

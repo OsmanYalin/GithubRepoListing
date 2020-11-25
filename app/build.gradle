@@ -91,11 +91,14 @@ dependencies {
     // coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutinesVersion"
 
+    // room
+    implementation "androidx.room:room-runtime:$versions.roomVersion"
+    implementation "androidx.room:room-ktx:$versions.roomVersion"
+    annotationProcessor "androidx.room:room-compiler:$versions.roomVersion"
+    kapt "androidx.room:room-compiler:$versions.roomVersion"
+
     // coil
     implementation "io.coil-kt:coil:$versions.coilVersion"
-
-    //material dialogs
-    implementation "com.afollestad.material-dialogs:core:$versions.materialDialogsVersion"
 
     // test
     testImplementation 'junit:junit:4.13.1'
