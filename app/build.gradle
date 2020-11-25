@@ -24,16 +24,6 @@ android {
         buildConfigField "String", "CLIENT_SECRET", project.CLIENT_SECRET
     }
 
-    buildTypes {
-        debug {
-            minifyEnabled false
-        }
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -54,6 +44,34 @@ android {
 
     kapt {
         generateStubs = true
+    }
+
+    def keystoreProperties = new Properties()
+    def keystorePropertiesFile = file("../keystore.properties")
+
+    if (keystorePropertiesFile.canRead()) {
+
+        signingConfigs {
+
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+            release {
+                storeFile file(project.projectDir.toString() + '/' + keystoreProperties['keystoreFilePath'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            if (keystorePropertiesFile.canRead()) {
+                signingConfig signingConfigs.release
+            }
+
+            minifyEnabled false
+        }
     }
 }
 
